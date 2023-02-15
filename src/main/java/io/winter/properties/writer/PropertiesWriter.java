@@ -19,10 +19,12 @@ public class PropertiesWriter {
 					.enable(YAMLGenerator.Feature.INDENT_ARRAYS))
 			.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
+	private final static String RESOURCES_LOCATION = "resources/main";
+
 	private final File folder;
 
 	public PropertiesWriter(Project project) {
-		this.folder = project.getLayout().getBuildDirectory().dir("resources/main").get().getAsFile();
+		this.folder = project.getLayout().getBuildDirectory().dir(RESOURCES_LOCATION).get().getAsFile();
 	}
 
 	public void write(Specification specification) throws IOException {
