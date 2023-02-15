@@ -4,20 +4,17 @@ plugins {
     id("com.gradle.plugin-publish") version "1.1.0"
 }
 
-group = "io.winter"
-version = "1.0-SNAPSHOT"
-
 gradlePlugin {
-    website.set("https://github.com/thewinterframework/properties")
-    vcsUrl.set("https://github.com/thewinterframework/properties.git")
+    website.set(findProperty("website").toString())
+    vcsUrl.set(findProperty("vcsUrl").toString())
     plugins {
-        create("propertiesPlugin") {
-            id = "io.winter.properties"
-            version = "1.0.14"
-            displayName = "WinterProperties"
-            description = "A Gradle plugin to generate Spigot plugin.yml properties from buildscript."
-            implementationClass = "io.winter.properties.PropertiesPlugin"
-            tags.set(listOf("spigot", "properties", "yaml"))
+        create(findProperty("plugin.name").toString()) {
+            id = findProperty("plugin.id").toString()
+            version = findProperty("version").toString()
+            displayName = findProperty("plugin.display.name").toString()
+            description = findProperty("plugin.description").toString()
+            implementationClass = findProperty("plugin.class").toString()
+            tags.set(findProperty("plugin.tags").toString().split(", ").toSet())
         }
     }
 }
@@ -28,7 +25,7 @@ repositories {
 
 dependencies {
     implementation(gradleApi())
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.4")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.14.2")
 
     compileOnly("org.projectlombok:lombok:1.18.26")
     annotationProcessor("org.projectlombok:lombok:1.18.26")
