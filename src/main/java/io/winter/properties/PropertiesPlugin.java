@@ -9,14 +9,16 @@ import org.gradle.api.plugins.JavaPlugin;
 public class PropertiesPlugin implements Plugin<Project> {
 
 	private final static String COMPILE_JAVA_TASK = "compileJava";
+	private final static String EXTENSION_NAME = "pluginProperties";
+	private final static String TASK_NAME = "generatePluginProperties";
 
 	@Override
 	public void apply(Project project) {
 		Specification specification = project.getExtensions()
-				.create("pluginProperties", Specification.class);
+				.create(EXTENSION_NAME, Specification.class);
 
 		project.getTasks()
-				.register("generatePluginProperties")
+				.register(TASK_NAME)
 				.configure(task -> task.doFirst(action -> {
 					PropertiesWriter writer = new PropertiesWriter(project);
 
@@ -32,7 +34,7 @@ public class PropertiesPlugin implements Plugin<Project> {
 				.configureEach(javaPlugin -> {
 					project.getTasks()
 							.named(COMPILE_JAVA_TASK)
-							.configure(task -> task.dependsOn("generatePluginProperties"));
+							.configure(task -> task.dependsOn(TASK_NAME));
 				});
 	}
 }
