@@ -1,10 +1,14 @@
 package io.winter.properties;
 
 import io.winter.properties.extensions.Specification;
+import io.winter.properties.writer.PropertiesWriter;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+import org.gradle.api.plugins.JavaPlugin;
 
 public class PropertiesPlugin implements Plugin<Project> {
+
+	private final static String COMPILE_JAVA_TASK = "compileJava";
 
 	@Override
 	public void apply(Project project) {
@@ -13,25 +17,22 @@ public class PropertiesPlugin implements Plugin<Project> {
 
 		project.getTasks()
 				.register("generatePluginProperties")
-				.configure(task -> {
-					task.doFirst((firstTask) -> {
-						System.out.println(specification.getMainClass());
-						System.out.println(specification.getPluginName());
-						System.out.println(specification.getVersion());
-						System.out.println(specification.getDescription());
-						System.out.println(specification.getAuthor());
-						System.out.println(specification.getWebsite());
-						System.out.println(specification.getLoad());
-						System.out.println(specification.getApiVersion());
-						System.out.println(specification.getAuthors());
-						System.out.println(specification.getDepends());
-						System.out.println(specification.getPrefix());
-						System.out.println(specification.getSoftDepends());
-						System.out.println(specification.getLoadBefore());
-						System.out.println(specification.getLibraries());
-						System.out.println(specification.getCommands());
-						System.out.println(specification.getPermissions());
-					});
+				.configure(task -> task.doFirst(action -> {
+					PropertiesWriter writer = new PropertiesWriter(project);
+
+					try {
+						writer.write(specification);
+					} catch (Exception e) {
+						throw new RuntimeException(e);
+					}
+				}));
+
+		project.getPlugins()
+				.withType(JavaPlugin.class)
+				.configureEach(javaPlugin -> {
+					project.getTasks()
+							.named(COMPILE_JAVA_TASK)
+							.configure(task -> task.dependsOn("generatePluginProperties"));
 				});
 	}
 }

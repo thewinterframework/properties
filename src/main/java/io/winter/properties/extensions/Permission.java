@@ -8,6 +8,6 @@ import java.util.List;
 public class Permission {
 	private String name;
 	private String description;
-	private Boolean isDefault;
-	private List<Permission> children;
+	private boolean isDefault;
+	private List<String> children;
 }
