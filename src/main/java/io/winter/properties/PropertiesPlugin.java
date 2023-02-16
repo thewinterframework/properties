@@ -1,10 +1,12 @@
 package io.winter.properties;
 
 import io.winter.properties.extensions.Specification;
+import io.winter.properties.extensions.SpecificationByProperties;
 import io.winter.properties.writer.PropertiesWriter;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.plugins.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 public class PropertiesPlugin implements Plugin<Project> {
 
@@ -13,9 +15,13 @@ public class PropertiesPlugin implements Plugin<Project> {
 	private final static String TASK_NAME = "generatePluginProperties";
 
 	@Override
-	public void apply(Project project) {
+	public void apply(@NotNull Project project) {
 		Specification specification = project.getExtensions()
-				.create(EXTENSION_NAME, Specification.class);
+				.create(
+						EXTENSION_NAME,
+						Specification.class,
+						SpecificationByProperties.createPropertyMap(project)
+				);
 
 		project.getTasks()
 				.register(TASK_NAME)

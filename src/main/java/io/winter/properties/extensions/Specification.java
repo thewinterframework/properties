@@ -1,5 +1,6 @@
 package io.winter.properties.extensions;
 
+import io.winter.properties.extensions.SpecificationByProperties.PropertyMap;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -24,6 +25,27 @@ public class Specification {
 	private List<String> softDepend;
 	private List<String> loadBefore;
 	private List<String> libraries;
+
+	public boolean isInvalid() {
+		return main.isEmpty() || name.isEmpty();
+	}
+
+	public Specification(PropertyMap properties) {
+		this.main = properties.getString("spigot.main");
+		this.apiVersion = properties.getString("spigot.api-version");
+		this.author = properties.getString("spigot.author");
+		this.authors = properties.getStringList("spigot.authors");
+		this.depend = properties.getStringList("spigot.depend");
+		this.description = properties.getString("spigot.description");
+		this.load = properties.getString("spigot.load");
+		this.loadBefore = properties.getStringList("spigot.loadbefore");
+		this.libraries = properties.getStringList("spigot.libraries");
+		this.name = properties.getString("spigot.name");
+		this.prefix = properties.getString("spigot.prefix");
+		this.softDepend = properties.getStringList("spigot.softdepend");
+		this.version = properties.getString("spigot.version");
+		this.website = properties.getString("spigot.website");
+	}
 
 	public Map<String, Object> serialize() {
 		Map<String, Object> map = new HashMap<>();
