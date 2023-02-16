@@ -1,5 +1,6 @@
 package io.winter.properties.writer;
 
+import io.winter.properties.Maps;
 import io.winter.properties.extensions.Specification;
 import org.gradle.api.Project;
 import org.yaml.snakeyaml.Yaml;
@@ -22,7 +23,7 @@ public class PropertiesWriter {
 
 	public void write(Specification specification) throws IOException {
 		try (FileWriter writer = new FileWriter(new File(folder, PLUGIN_PROPERTIES_FILE))) {
-			YAML.dump(specification.serialize(), writer);
+			YAML.dump(Maps.skipNulls(specification.serialize()), writer);
 		}
 	}
 
